@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Developer Portfolio</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.5/cdn.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="./src/output.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .code-font {
+      font-family: 'Fira Code', monospace;
+    }
+    
+    .terminal {
+      background-color: #1e293b;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    
+    .terminal-header {
+      background-color: #334155;
+      border-top-left-radius: 0.5rem;
+      border-top-right-radius: 0.5rem;
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+    }
+    
+    .terminal-circle {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+    
+    .terminal-red { background-color: #ef4444; }
+    .terminal-yellow { background-color: #f59e0b; }
+    .terminal-green { background-color: #10b981; }
+    
+    .terminal-body {
+      padding: 1rem;
+      overflow-y: auto;
+      max-height: 60vh;
+    }
+    
+    .prompt {
+      color: #10b981;
+      margin-right: 0.5rem;
+    }
+    
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      height: 18px;
+      background-color: #ffffff;
+      animation: blink 1s infinite;
+    }
+    
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    
+    /* Project card hover effect */
+    .project-card {
+      transition: all 0.3s ease;
+    }
+    
+    .project-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    /* Particles background */
+    #particles-js {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+    
+    /* Dark mode toggle */
+    .toggle-checkbox:checked {
+      right: 0;
+      border-color: #10b981;
+    }
+    
+    .toggle-checkbox:checked + .toggle-label {
+      background-color: #10b981;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-gray-100 antialiased" x-data="{ darkMode: true, navOpen: false, activeSection: 'home', showModal: false, currentProject: {} }">
+  <!-- Particles.js Background -->
+  <div id="particles-js" class="opacity-30"></div>
+  
+  <!-- Navigation -->
+  <nav class="fixed w-full top-0 z-50 bg-slate-800 border-b border-slate-700 shadow-lg">
+    <div class="container mx-auto px-4 py-3">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center">
+          <div class="code-font text-xl font-bold text-emerald-500">
+            <span class="text-white"></span>Ahmad Saeful Ramadhani<span class="text-white"></span>
+          </div>
+        </div>
+        
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex">
+          <button @click="activeSection = 'home'" class="px-4 py-2 mx-1 rounded hover:bg-slate-700" :class="{ 'bg-slate-700 text-emerald-500': activeSection === 'home' }">Home</button>
+          <button @click="activeSection = 'about'" class="px-4 py-2 mx-1 rounded hover:bg-slate-700" :class="{ 'bg-slate-700 text-emerald-500': activeSection === 'about' }">About</button>
+          <button @click="activeSection = 'skills'" class="px-4 py-2 mx-1 rounded hover:bg-slate-700" :class="{ 'bg-slate-700 text-emerald-500': activeSection === 'skills' }">Skills</button>
+          <button @click="activeSection = 'projects'" class="px-4 py-2 mx-1 rounded hover:bg-slate-700" :class="{ 'bg-slate-700 text-emerald-500': activeSection === 'projects' }">Projects</button>
+        </div>
+        
+        <!-- Mobile Menu Button -->
+        <div class="md:hidden">
+          <button @click="navOpen = !navOpen" class="text-gray-300 hover:text-white focus:outline-none">
+            <svg class="h-6 w-6 fill-current" viewBox="0 0 24 24">
+              <path x-show="!navOpen" d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"></path>
+              <path x-show="navOpen" d="M18.278 16.864a1 1 0 0 1-1.414 1.414l-4.829-4.828-4.828 4.828a1 1 0 0 1-1.414-1.414l4.828-4.829-4.828-4.828a1 1 0 0 1 1.414-1.414l4.829 4.828 4.828-4.828a1 1 0 1 1 1.414 1.414l-4.828 4.829 4.828 4.828z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Mobile Menu -->
+      <div x-show="navOpen" class="md:hidden" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform -translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 transform translate-y-0" x-transition:leave-end="opacity-0 transform -translate-y-2">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          <button @click="activeSection = 'home'; navOpen = false" class="block px-3 py-2 rounded w-full text-left" :class="{ 'bg-slate-700 text-emerald-500': activeSection === 'home' }">Home</button>
+          <button @click="activeSection = 'about'; navOpen = false" class="block px-3 py-2 rounded w-full text-left" :class="{ 'bg-slate-700 text-emerald-500': activeSection === 'about' }">About</button>
+          <button @click="activeSection = 'skills'; navOpen = false" class="block px-3 py-2 rounded w-full text-left" :class="{ 'bg-slate-700 text-emerald-500': activeSection === 'skills' }">Skills</button>
+          <button @click="activeSection = 'projects'; navOpen = false" class="block px-3 py-2 rounded w-full text-left" :class="{ 'bg-slate-700 text-emerald-500': activeSection === 'projects' }">Projects</button>
+          <button @click="activeSection = 'contact'; navOpen = false" class="block px-3 py-2 rounded w-full text-left" :class="{ 'bg-slate-700 text-emerald-500': activeSection === 'contact' }">Contact</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 pt-24 pb-16">
+    <!-- Home Section -->
+    <section x-show="activeSection === 'home'" class="min-h-screen flex flex-col justify-center items-center py-12" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+      <div class="max-w-3xl mx-auto text-center">
+        <h1 class="text-4xl md:text-6xl font-bold mb-4">
+          <span class="text-white">Halo Nama saya</span>
+          <span class="text-emerald-500">Ahmad Saeful Ramadhani</span>
+        </h1>
+        <div class="text-xl md:text-2xl mb-8 code-font text-gray-300">
+          <span>I'm the storm that is approaching </span><span id="typed-strings"></span>
+        </div>
+        
+        <div class="terminal w-full md:w-4/5 mx-auto">
+          <div class="terminal-header">
+            <div class="terminal-circle terminal-red"></div>
+            <div class="terminal-circle terminal-yellow"></div>
+            <div class="terminal-circle terminal-green"></div>
+            <div class="text-gray-300 text-sm ml-2 code-font">bash ~ portfolio</div>
+          </div>
+          <div class="terminal-body code-font text-gray-300">
+            <div class="mb-2">
+              <span class="prompt">$</span>
+              <span id="terminal-text"></span>
+            </div>
+            <div class="mt-4">
+              <span class="prompt">$</span>
+              <span>Ayo cari tau tentang diriku di website ini</span>
+              <span class="cursor"></span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-12">
+          <button @click="activeSection = 'projects'" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-lg mr-4 transition">
+            View My Work
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section x-show="activeSection === 'about'" class="min-h-screen py-12" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-3xl font-bold mb-8 text-center">
+          <span class="text-emerald-500"></span>
+          Tentang saya
+          <span class="text-emerald-500"></span>
+        </h2>
+        
+        <div class="bg-slate-800 rounded-lg shadow-xl p-8 border border-slate-700">
+          <div class="flex flex-col md:flex-row gap-8">
+            <div class="w-full md:w-1/3">
+              <div class="bg-slate-700 rounded-lg overflow-hidden">
+                <img src="./img/WhatsApp Image 2025-03-12 at 7.43.20 PM.jpeg" alt="Your profile image" class="w-full h-auto">
+              </div>
+              
+              <div class="mt-6 space-y-4">
+                <div class="flex items-center">
+                  <div class="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-500">
+                    <i class="fas fa-map-marker-alt"></i>
+                  </div>
+                  <span class="ml-3 text-gray-300">Kb. Baru, Kec. Tebet, Kota Jakarta Selatan, Daerah Ibukota Jakarta 12830</span>
+                </div>
+                
+                <div class="flex items-center">
+                  <div class="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-500">
+                    <i class="fas fa-graduation-cap"></i>
+                  </div>
+                  <span class="ml-3 text-gray-300">SMK Cyber Media</span>
+                </div>
+                
+                <div class="flex items-center">
+                  <div class="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-500">
+                    <i class="fas fa-briefcase"></i>
+                  </div>
+                  <span class="ml-3 text-gray-300">Maha siswa/Pelajar</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="w-full md:w-2/3">
+              <h3 class="text-2xl font-bold mb-4">Hey there, I'm <span class="text-emerald-500">Your Name</span></h3>
+              
+              <p class="text-gray-300 mb-4">
+                Halo! Saya Saeful, seorang pelajar di jurusan Teknik Jaringan Komputer dan Telekomunikasi (TJKT) yang memiliki minat besar dalam dunia teknologi.
+              </p>
+              
+              <p class="text-gray-300 mb-4">
+                Saya suka belajar tentang jaringan komputer, pemrograman, dan hardware. Saat ini saya sedang mendalami konfigurasi jaringan, administrasi server, atau coding dengan JS/JAVA. Saya juga aktif mengembangkan proyek kecil untuk meningkatkan kemampuan saya.
+              </p>
+              
+              <p class="text-gray-300 mb-6">
+                Saat saya tidak sedang coding, saya melakukan hobi seperti bermain game, nonton anime, dan membaca comic. Saya percaya bahwa kehidupan yang seimbang membuat saya menjadi programmer yang lebih baik, 
+                menghadirkan perspektif baru dan solusi kreatif untuk tantangan yang saya hadapi.
+              </p>
+              
+              <div class="flex flex-wrap gap-4">
+                <a href="https://www.instagram.com/sfl_donny?igsh=eThqcmsxaTVsdXpm" class="bg-slate-700 hover:bg-slate-600 text-white py-2 px-4 rounded flex items-center">
+                  <i class="fab fa-instagram mr-2"></i> instagram
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section x-show="activeSection === 'skills'" class="min-h-screen py-12" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-3xl font-bold mb-8 text-center">
+          <span class="text-emerald-500"></span>
+          Skill Saya
+          <span class="text-emerald-500"></span>
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- Frontend Skills -->
+          <div class="bg-slate-800 rounded-lg shadow-xl p-6 border border-slate-700">
+            <div class="flex items-center mb-6">
+              <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-500 mr-4">
+                <i class="fas fa-code text-xl"></i>
+              </div>
+              <h3 class="text-xl font-bold">Frontend Development</h3>
+            </div>
+            
+            <div class="space-y-4">
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-gray-300">HTML5 & CSS3</span>
+                  <span class="text-gray-400">80%</span>
+                </div>
+                <div class="w-full bg-slate-700 rounded-full h-2.5">
+                  <div class="bg-blue-500 h-2.5 rounded-full" style="width: 80%"></div>
+                </div>
+              </div>
+              
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-gray-300">JavaScript</span>
+                  <span class="text-gray-400">30%</span>
+                </div>
+                <div class="w-full bg-slate-700 rounded-full h-2.5">
+                  <div class="bg-blue-500 h-2.5 rounded-full" style="width: 30%"></div>
+                </div>
+              </div>
+              
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-gray-300">React.js</span>
+                  <span class="text-gray-400">40%</span>
+                </div>
+                <div class="w-full bg-slate-700 rounded-full h-2.5">
+                  <div class="bg-blue-500 h-2.5 rounded-full" style="width: 40%"></div>
+                </div>
+              </div>
+              
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-gray-300">Tailwind CSS</span>
+                  <span class="text-gray-400">50%</span>
+                </div>
+                <div class="w-full bg-slate-700 rounded-full h-2.5">
+                  <div class="bg-blue-500 h-2.5 rounded-full" style="width: 50%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Backend Skills -->
+          <div class="bg-slate-800 rounded-lg shadow-xl p-6 border border-slate-700">
+            <div class="flex items-center mb-6">
+              <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center text-purple-500 mr-4">
+                <i class="fas fa-server text-xl"></i>
+              </div>
+              <h3 class="text-xl font-bold">Cisco packet tracer</h3>
+            </div>
+            
+            <div class="space-y-4">
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-gray-300">Routing static</span>
+                  <span class="text-gray-400">85%</span>
+                </div>
+                <div class="w-full bg-slate-700 rounded-full h-2.5">
+                  <div class="bg-purple-500 h-2.5 rounded-full" style="width: 85%"></div>
+                </div>
+              </div>
+              
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-gray-300">Routing Dinamis</span>
+                  <span class="text-gray-400">0%</span>
+                </div>
+                <div class="w-full bg-slate-700 rounded-full h-2.5">
+                  <div class="bg-purple-500 h-2.5 rounded-full" style="width: 80%"></div>
+                </div>
+              </div>
+              
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-gray-300">BGP</span>
+                  <span class="text-gray-400">75%</span>
+                </div>
+                <div class="w-full bg-slate-700 rounded-full h-2.5">
+                  <div class="bg-purple-500 h-2.5 rounded-full" style="width: 75%"></div>
+                </div>
+              </div>
+              
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-gray-300">OSPF</span>
+                  <span class="text-gray-400">70%</span>
+                </div>
+                <div class="w-full bg-slate-700 rounded-full h-2.5">
+                  <div class="bg-purple-500 h-2.5 rounded-full" style="width: 70%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Other Skills -->
+          <div class="bg-slate-800 rounded-lg shadow-xl p-6 border border-slate-700">
+            <div class="flex items-center mb-6">
+              <div class="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-500 mr-4">
+                <i class="fas fa-tools text-xl"></i>
+              </div>
+              <h3 class="text-xl font-bold">Tools & Others</h3>
+            </div>
+            
+            <div class="space-y-4">
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-gray-300">crimping</span>
+                  <span class="text-gray-400">90%</span>
+                </div>
+                <div class="w-full bg-slate-700 rounded-full h-2.5">
+                  <div class="bg-emerald-500 h-2.5 rounded-full" style="width: 90%"></div>
+                </div>
+              </div>
+              
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-gray-300">testing kabel</span>
+                  <span class="text-gray-400">85%</span>
+                </div>
+                <div class="w-full bg-slate-700 rounded-full h-2.5">
+                  <div class="bg-emerald-500 h-2.5 rounded-full" style="width: 85%"></div>
+                </div>
+              </div>
+              
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-gray-300">AWS</span>
+                  <span class="text-gray-400">60%</span>
+                </div>
+                <div class="w-full bg-slate-700 rounded-full h-2.5">
+                  <div class="bg-emerald-500 h-2.5 rounded-full" style="width: 60%"></div>
+                </div>
+              </div>
+              
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-gray-300">Figma</span>
+                  <span class="text-gray-400">75%</span>
+                </div>
+                <div class="w-full bg-slate-700 rounded-full h-2.5">
+                  <div class="bg-emerald-500 h-2.5 rounded-full" style="width: 75%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Soft Skills -->
+          
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section x-show="activeSection === 'projects'" class="min-h-screen py-12" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+      <div class="max-w-6xl mx-auto">
+        <h2 class="text-3xl font-bold mb-8 text-center">
+          <span class="text-emerald-500"></span>
+          Project yang saya terapkan
+          <span class="text-emerald-500"></span>
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Project 1 -->
+          <div class="bg-slate-800 rounded-lg overflow-hidden shadow-lg border border-slate-700 project-card">
+            <div class="relative">
+              <img src="./img/project cisco(1)(1)(1)(1).png" alt="Project 1" class="w-full h-48 object-cover">
+            </div>
+            <div class="p-5">
+              <h3 class="text-xl font-bold mb-2">Project cisco packet tracer</h3>
+              <p class="text-gray-300 mb-4 line-clamp-3">
+               Sebuah rancangan jaringan yang saya routing menggunakan routing dinamis
+              </p>
+              <div class="flex flex-wrap mb-4 gap-2">
+                <span class="bg-slate-700 text-gray-300 text-xs px-2 py-1 rounded">React</span>
+                <span class="bg-slate-700 text-gray-300 text-xs px-2 py-1 rounded">Node.js</span>
+                <span class="bg-slate-700 text-gray-300 text-xs px-2 py-1 rounded">MongoDB</span>
+              </div>
+              <div class="flex justify-between">
+                <button @click="currentProject = {
+                  title: 'Project Name 1',
+                  description: 'A full description of Project 1. This is where you would provide details about the project, its features, the challenges you faced, and how you overcame them. You can also mention your role in the project and what you learned from it.',
+                  technologies: ['React', 'Node.js', 'MongoDB',
